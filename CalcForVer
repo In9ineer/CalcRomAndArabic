@@ -1,0 +1,119 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+
+        Scanner input = new Scanner(System.in);                                 //ввод выражения
+        String scanner = input.nextLine();
+        char sign;                                                              //знак выражения
+
+        String[] variables = new String[2];
+        if (scanner.contains("+")) {                                            //сохранение знака
+            sign = '+';
+            variables = scanner.split("\\+");                             // деление строки ввода по знаку
+        } else if (scanner.contains("-")) {
+            sign = '-';
+            variables = scanner.split("-");
+        } else if (scanner.contains("*")) {
+            sign = '*';
+            variables = scanner.split("\\*");
+        } else if (scanner.contains("/")) {
+            sign = '/';
+            variables = scanner.split("/");
+        } else {
+            System.out.println("Введено не корректное выражение");             //если нет знака
+            return;
+        }
+        String variable1 = variables[0];                                      // значение до знака действия
+        String variable2 = variables[1];                                      // значение после знака действия
+
+        String[] romNumeral = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};  //массив римских чисел
+        String[] arNumeral = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};             //массив арабских чисел
+
+        int rom1 = -1;
+        int rom2 = -1;
+        int ar1 = -1;
+        int ar2 = -1;
+
+        for (int i = 0; i < romNumeral.length; i++) {               //если до знака римское число
+            if (romNumeral[i].equals(variable1)) {
+                rom1 = i+1;
+                break;
+            }
+        }
+        for (int i = 0; i < romNumeral.length; i++) {               //если после знака ремское число
+            if (romNumeral[i].equals(variable2)) {
+                rom2 = i+1;
+                break;
+            }
+        }
+
+        for (int i = 0; i < arNumeral.length; i++) {               //если до знака арабское число
+            if (arNumeral[i].equals(variable1)) {
+                ar1 = i+1;
+                break;
+            }
+        }
+        for (int i = 0; i < arNumeral.length; i++) {               //если после знака арабское число
+            if (arNumeral[i].equals(variable2)) {
+                ar2 = i+1;
+                break;
+            }
+        }
+
+        String[] romExit = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",     // для ответа римским числом
+                "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+                "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
+                "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+                "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L",
+                "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX",
+                "LXI", "LXII", "LXIII", "LXIV", "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX",
+                "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX",
+                "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
+                "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
+
+        int a=0, b = 0, c=0;                        // переменные для выполнения операции
+
+        if(ar1>0 && ar2>0){                                                                //если оба числа арабские
+            a=ar1;
+            b=ar2;
+        }
+        else if(rom1>0 && rom2>0) {                                                       //если оба числа римские
+            a=rom1;
+            b=rom2;
+        }
+        else if (ar1>0 && rom2>0 || ar2>0 && rom1>0){                                      //если числа разных форматов
+            System.out.println("Числа должны оба римскими или оба арабскими");
+        }
+        else {                                                                             //не число от 1 до 10
+            System.out.println("Не верный формат числа");
+        }
+
+        switch (sign) {                             // какое действие будет производиться
+            case '+' :
+                c=a+b;
+                break;
+            case '-' :
+                c=a-b;
+                break;
+            case '*' :
+                c=a*b;
+                break;
+            case '/' :
+                c=a/b;
+                break;
+        }
+
+        if(ar1>0 && ar2>0){
+            System.out.println(c);
+        }
+        else if (rom1>0 && rom2>0 && c>0){
+            System.out.println(romExit[c-1]);
+        }
+        else {
+            System.out.println("Римское число не может быть отрицательным");
+        }
+
+        System.out.println(variable1);
+    }
+}
