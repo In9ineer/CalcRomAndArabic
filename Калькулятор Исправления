@@ -1,0 +1,147 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+
+        Scanner input = new Scanner(System.in);                                 //ввод выражения
+        String scanner = input.nextLine();
+        String sign;                                                              //знак выражения
+
+        String[] variables;
+        if (scanner.contains("+")) {                                            //сохранение знака
+            sign = "+";
+            variables = scanner.split("\\+");                             // деление строки ввода по знаку
+        } else if (scanner.contains("-")) {
+            sign = "-";
+            variables = scanner.split("-");
+        } else if (scanner.contains("*")) {
+            sign = "*";
+            variables = scanner.split("\\*");
+        } else if (scanner.contains("/")) {
+            sign = "/";
+            variables = scanner.split("/");
+        } else {
+            throw new Exception("throws Exception //т.к. строка не является математической операцией");
+        }
+
+
+        try {                                                                 // проверка на кол-во операндов вызовом метода
+            checkQuantity(variables);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
+
+        try {                                                                 // вызов метода calc
+            String answer = calc(variables, sign, "");
+            System.out.println(answer);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
+
+    }
+
+
+    // Если введено больше двух чисел
+    public static void checkQuantity(String[] variables) throws Exception {
+        if (variables.length > 2) {
+            throw new Exception("throws Exception //т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+        }
+    }
+
+    public static String calc(String[] variables, String sign, String answer) throws Exception{
+
+        String[] romNumeral = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};  //массив римских чисел
+        String[] arNumeral = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};             //массив арабских чисел
+
+        int rom1 = -1;
+        int rom2 = -1;
+        int ar1 = -1;
+        int ar2 = -1;
+
+        for (int i = 0; i < romNumeral.length; i++) {               //если до знака римское число
+            if (romNumeral[i].equals(variables[0])) {
+                rom1 = i+1;
+                break;
+            }
+        }
+        for (int i = 0; i < romNumeral.length; i++) {               //если после знака ремское число
+            if (romNumeral[i].equals(variables[1])) {
+                rom2 = i+1;
+                break;
+            }
+        }
+
+        for (int i = 0; i < arNumeral.length; i++) {               //если до знака арабское число
+            if (arNumeral[i].equals(variables[0])) {
+                ar1 = i+1;
+                break;
+            }
+        }
+        for (int i = 0; i < arNumeral.length; i++) {               //если после знака арабское число
+            if (arNumeral[i].equals(variables[1])) {
+                ar2 = i+1;
+                break;
+            }
+        }
+
+        String[] romExit = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",     // для ответа римским числом
+                "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+                "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
+                "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+                "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L",
+                "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX",
+                "LXI", "LXII", "LXIII", "LXIV", "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX",
+                "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX",
+                "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
+                "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
+
+        int a=0, b = 0, c=0;                                                      // переменные для выполнения операции
+
+        if(ar1>0 && ar2>0){                                                                //если оба числа арабские
+            a=ar1;
+            b=ar2;
+        }
+        else if(rom1>0 && rom2>0) {                                                       //если оба числа римские
+            a=rom1;
+            b=rom2;
+        }
+        else if (ar1>0 && rom2>0 || ar2>0 && rom1>0){                                      //если числа разных форматов
+            throw new Exception("throws Exception //т.к. используются одновременно разные системы счисления");
+        }
+        else {                                                                             //не число от 1 до 10
+            System.out.println("Не верный формат числа");
+        }
+
+        switch (sign) {                             // какое действие будет производиться
+            case "+" :
+                c=a+b;
+                break;
+            case "-" :
+                c=a-b;
+                break;
+            case "*" :
+                c=a*b;
+                break;
+            case "/" :
+                c=a/b;
+                break;
+        }
+
+        if(ar1>0 && ar2>0){
+            answer = Integer.toString(c);
+        }
+        else if (rom1>0 && rom2>0 && c>0){
+            answer = romExit[c - 1];
+        }
+        else {
+            throw new Exception("throws Exception //т.к. в римской системе нет отрицательных чисел");
+        }
+
+        return answer;
+
+
+    }
+
+}
